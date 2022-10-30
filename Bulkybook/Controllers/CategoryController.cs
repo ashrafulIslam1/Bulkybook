@@ -1,6 +1,7 @@
 ﻿using Bulkybook.Data;
 using Bulkybook.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Bulkybook.Controllers
 {
@@ -14,11 +15,18 @@ namespace Bulkybook.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            //var objCategoryList = _db.Categories.ToList();
-            IEnumerable<Category> objCategoryList = _db.Categories;
-            return View(objCategoryList);
+            ViewData["filterStudent"] = searchString;
+
+            var query = _db.Categories.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+                query = query.Where(x => x.Name.Contains(searchString));
+
+            return View(query.ToList());
+            
+
         }
 
         // GET
@@ -74,7 +82,7 @@ namespace Bulkybook.Controllers
         // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // Here I am colleting all the data which user give into the form and I will store them into databsase
+        // Here I am collet the data from database then I will update the data and I will restore them into databsase
         public IActionResult Update(Category obj) // here colleting data by using Category parameter obj
         {
             if (obj.Name == obj.DisplayOrder.ToString())

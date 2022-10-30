@@ -11,6 +11,8 @@ namespace Bulkybook.Data
 
         // Here I created a table name Categories in Database which will have all the data from Category Model.
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Attendance> Attendance { get; set; }
+        public DbSet<BaseEntity> BaseEntity { get; set; }
 
     }
 }
